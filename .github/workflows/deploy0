@@ -1,0 +1,23 @@
+name: Deploy to EC20
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: executing remote ssh commands using ssh key
+        uses: appleboy/ssh-action@v0.1.10
+         with:
+           host: ${{ secrets.HOST }}
+           username: ${{ secrets.USERNAME }}
+           key: ${{ secrets.SSH_PRIVATE_KEY }}
+           passphrase: ${{ secrets.SSH_PRIVATE_KEY }}
+           script: expect /opt/odoo15/git-scripts/expect-script.exp
