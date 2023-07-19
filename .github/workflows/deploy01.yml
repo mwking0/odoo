@@ -21,7 +21,5 @@ jobs:
       - name: Run SSH Command
         
         run: |
-          ssh -o StrictHostKeyChecking=no -i "$SSH_AWS_KEY" ubuntu@13.51.177.145 'expect /opt/odoo15/git-scripts/expect-script.exp'
-          exit 0
-
-
+          timeout 30s ssh -o StrictHostKeyChecking=no -i "$SSH_AWS_KEY" ubuntu@13.51.177.145 'expect /opt/odoo15/git-scripts/expect-script.exp'
+          
