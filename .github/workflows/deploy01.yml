@@ -1,0 +1,27 @@
+name: SSH Command
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.2
+        with:
+          ssh-private-key: ${{ secrets.SSH_AWS_KEY }}
+
+      - name: Run SSH Command
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_AWS_KEY }}
+        run: |
+          ssh -o StrictHostKeyChecking=no -i "$SSH_AWS_KEY" ubuntu@13.51.177.145 'expect /opt/odoo15/git-scripts/expect-script.exp'
+
+
