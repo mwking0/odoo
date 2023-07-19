@@ -1,4 +1,4 @@
-name: Deploy to EC201
+name: SSH Command
 
 on:
   push:
@@ -10,14 +10,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout Repository
         uses: actions/checkout@v2
-      
+
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.5.2
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          ssh-private-key: ${{ secrets.SSH_AWS_KEY }}
 
-      - name: Deploy to EC2
+      - name: Run SSH Command
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
-          ssh -o StrictHostKeyChecking=no -i ${{ secrets.SSH_PRIVATE_KEY }} ubuntu@13.51.177.145 'expect /opt/odoo15/git-scripts/expect-script.exp'
+          ssh -o StrictHostKeyChecking=no -i "$SSH_AWS_KEY" ubuntu@13.51.177.145 'expect /opt/odoo15/git-scripts/expect-script.exp'
+
