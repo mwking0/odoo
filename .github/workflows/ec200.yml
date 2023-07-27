@@ -1,0 +1,38 @@
+name: Deploy to EC200
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: Setup Python
+        uses: actions/setup-python@v2  # Set up Python on the runner
+        with:
+          python-version: 3.x  # Replace with the appropriate Python version
+
+      - name: Install Odoo dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt  # Assuming you have a requirements.txt file with Odoo dependencies
+
+      - name: Start Odoo server
+        run: |
+          odoo-bin -c odoo.conf  # Replace with the path to your Odoo configuration file
+
+      - name: Execute expect script
+        uses: appleboy/ssh-action@v0.1.4
+        with:
+           host: 13.51.177.145
+           username: ubuntu
+           key: ${{ secrets.SSH_AWS_KEY }}
+           script: |
+              bash /opt/odoo15/git-scripts/aws.sh
