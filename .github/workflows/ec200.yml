@@ -17,12 +17,13 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v2  # Set up Python on the runner
         with:
-          python-version: 3.x  # Replace with the appropriate Python version
+          python-version: 3  # Replace with the appropriate Python version
 
       - name: Install Odoo dependencies
         run: |
-          pip install --upgrade pip
-          pip install -r requirements.txt  # Assuming you have a requirements.txt file with Odoo dependencies
+          pip3 install --upgrade pip
+          pip3 install wheel
+          pip3 install -r requirements.txt  # Assuming you have a requirements.txt file with Odoo dependencies
 
       - name: Start Odoo server
         run: |
