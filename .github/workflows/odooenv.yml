@@ -49,5 +49,5 @@ jobs:
       - name: Run Odoo server
         run: |
           source odoo-venv/bin/activate
-          sudo odoo-bin 
+          sudo python3 odoo-bin 
 
