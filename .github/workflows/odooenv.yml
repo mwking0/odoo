@@ -1,4 +1,4 @@
-name: Deploy to EC200
+name: odoo env
 
 on:
   push:
