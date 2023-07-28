@@ -1,0 +1,42 @@
+name: Prepare Odoo Environment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  prepare_odoo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-pip
+          sudo apt-get install -y postgresql postgresql-server-dev-all
+          sudo apt-get install -y build-essential fontconfig libfontconfig1-dev libxext-dev libxrender-dev libfreetype6-dev libssl-dev libx11-dev openssl git
+
+      - name: Install Odoo dependencies
+        run: |
+          python3 -m venv odoo-venv
+          source odoo-venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt  # Assuming you have a requirements.txt file with Odoo dependencies
+
+      - name: Start PostgreSQL server
+        run: sudo service postgresql start
+
+      - name: Prepare Odoo database
+        run: |
+          source odoo-venv/bin/activate
+          python odoo-bin -c odoo.conf -d <your_database_name> --without-demo=ALL --stop-after-init
+
+      - name: Run Odoo server
+        run: |
+          source odoo-venv/bin/activate
+          python odoo-bin -c odoo.conf
