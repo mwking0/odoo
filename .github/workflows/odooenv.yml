@@ -1,4 +1,4 @@
-name: odooss
+name: Prepare Odoo Environment
 
 on:
   push:
@@ -6,48 +6,49 @@ on:
       - main
 
 jobs:
-  deploy:
+  prepare_odoo:
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 15
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-        
-      - name: Setup Python
-        uses: actions/setup-python@v2  # Set up Python on the runner
-        with:
-          python-version: 3  # Replace with the appropriate Python version
+
+      - name: Update Package Lists
+        run: sudo apt-get update
+
+      - name: Fix Broken Packages (if any)
+        run: sudo apt-get install -f
+
+      - name: Install PostgreSQL from PostgreSQL Repository
+        run: |
+          sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+          wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+          sudo apt-get update
+          sudo apt-get install -y postgresql postgresql-server-dev-all
+
+      - name: Install Other System Dependencies
+        run: |
+          sudo apt-get install -y build-essential fontconfig libfontconfig1-dev libxext-dev libxrender-dev libfreetype6-dev libssl-dev libx11-dev openssl git
 
       - name: Install Odoo dependencies
         run: |
-          sudo apt update
-          sudo apt upgrade -y
-          apt search postgresql-server-dev
-          sudo apt update
-
-          sudo apt install postgresql build-essential python3-pillow python3-lxml python3-dev python3-pip python3-setuptools npm nodejs git gdebi libldap2-dev libsasl2-dev libxml2-dev python3-wheel python3-venv libxslt1-dev node-less libjpeg-dev -y 
-          sudo apt update
-
-          sudo apt remove wkhtmltopdf
-          sudo apt-get install -y openssl build-essential libssl-dev libxrender-dev git-core libx11-dev libxext-dev libfontconfig1-dev libfreetype6-dev fontconfig
-          apt install python3.8-venv
-          
           python3 -m venv odoo-venv
           source odoo-venv/bin/activate
-          pip3 install wheel
-          pip3 install -r requirements.txt  # Assuming you have a requirements.txt file with Odoo dependencies
+          pip install --upgrade pip
+          pip install -r requirements.txt  # Assuming you have a requirements.txt file with Odoo dependencies
 
-      - name: Start Odoo server
+      - name: Start PostgreSQL server
+        run: sudo service postgresql start
+
+      - name: Prepare Odoo database
         run: |
-          odoo-bin -c odoo.conf  # Replace with the path to your Odoo configuration file
+          source odoo-venv/bin/activate
+          python odoo-bin -c odoo.conf -d <your_database_name> --without-demo=ALL --stop-after-init
 
-      - name: Execute expect script
-        uses: appleboy/ssh-action@v0.1.4
-        with:
-           host: 13.51.177.145
-           username: ubuntu
-           key: ${{ secrets.SSH_AWS_KEY }}
-           script: |
-              bash /opt/odoo15/git-scripts/aws.sh
+      - name: Run Odoo server
+        run: |
+          source odoo-venv/bin/activate
+          python odoo-bin -c odoo.conf
+
 
