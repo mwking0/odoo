@@ -43,8 +43,8 @@ jobs:
 
       - name: Prepare Odoo database
         run: |
+          python3 -m venv odoo-venv
           source odoo-venv/bin/activate
-          python odoo-bin -c odoo.conf -d <your_database_name> --without-demo=ALL --stop-after-init
 
       - name: Run Odoo server
         run: |
