@@ -34,7 +34,7 @@ jobs:
 
       - name: Install Odoo dependencies
         run: |
-          
+          sudo apt update
           sudo apt-get install -y openssl build-essential libssl-dev libxrender-dev git-core libx11-dev libxext-dev libfontconfig1-dev libfreetype6-dev fontconfig python3.8-venv
           sudo apt install python3.8-venv
           python3 -m venv odoo-venv
