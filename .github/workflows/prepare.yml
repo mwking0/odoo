@@ -33,8 +33,7 @@ jobs:
 
       - name: Install Odoo dependencies
         run: |
-          python3 -m venv odoo-venv
-          source odoo-venv/bin/activate
+          
           pip install --upgrade pip
           pip install -r requirements.txt  # Assuming you have a requirements.txt file with Odoo dependencies
 
@@ -48,6 +47,8 @@ jobs:
 
       - name: Run Odoo server
         run: |
+          python3 -m venv odoo-venv
+          source odoo-venv/bin/activate
           source odoo-venv/bin/activate
           python odoo-bin -c odoo.conf
 
