@@ -30,10 +30,10 @@ jobs:
       - name: Install Other System Dependencies
         run: |
           sudo apt-get install -y build-essential fontconfig libfontconfig1-dev libxext-dev libxrender-dev libfreetype6-dev libssl-dev libx11-dev openssl git libldap2-dev libsasl2-dev python3-pillow python3-lxml postgresql postgresql-server-dev-12 python3-dev python3-pip python3-setuptools npm nodejs gdebi libxml2-dev python3-wheel python3-venv libxslt1-dev node-less libjpeg-dev
-
+          sudo pg_ctlcluster 12 main start
       - name: Install Odoo dependencies
         run: |
-          sudo pg_ctlcluster 12 main start
+          
           sudo apt-get install -y openssl build-essential libssl-dev libxrender-dev git-core libx11-devlibxext-dev libfontconfig1-dev libfreetype6-dev fontconfig
           apt install python3.8-venv
           python3 -m venv odoo-venv
