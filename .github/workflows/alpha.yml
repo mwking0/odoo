@@ -58,8 +58,8 @@ jobs:
 
       - name: Prepare Odoo database
         run: |
-          python3 -m venv odoo-venv
-          source odoo-venv/bin/activate
+          #python3 -m venv odoo-venv
+          #source odoo-venv/bin/activate
       - name: Run Odoo server
         run: |
           source odoo-venv/bin/activate
