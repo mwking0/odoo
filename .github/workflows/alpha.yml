@@ -63,6 +63,6 @@ jobs:
       - name: Run Odoo server
         run: |
           source odoo-venv/bin/activate
-          sudo cat odoo-bin
+          #sudo cat odoo-bin
           sudo bash odoo-bin --test-enable --log-level=test
           python odoo-bin --addons-path=addons -d odoo
