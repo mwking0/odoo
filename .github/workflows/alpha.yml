@@ -64,4 +64,4 @@ jobs:
         run: |
           source odoo-venv/bin/activate
           sudo cat odoo-bin
-          ./odoo-bin --test-enable --log-level=test
+          sudo bash odoo-bin --test-enable --log-level=test
