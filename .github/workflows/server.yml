@@ -8,7 +8,7 @@ on:
 
 jobs:
   run_odoo_server:
-    runs-on: ubuntu-latest  # Use the ubuntu-latest runner with Ubuntu 20.04
+    runs-on: 20.04  # Use the ubuntu-latest runner with Ubuntu 20.04
 
     services:
       postgres:
