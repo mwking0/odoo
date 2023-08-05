@@ -50,10 +50,10 @@ jobs:
 
       - name: Start PostgreSQL and Odoo Containers
         run: |
-          cd path/to/odoo  # Replace 'path/to/odoo' with the actual path to your Odoo server files
+          #cd path/to/odoo  # Replace 'path/to/odoo' with the actual path to your Odoo server files
           docker-compose up --detach
 
       - name: Run Odoo Server
         run: |
-          cd path/to/odoo  # Replace 'path/to/odoo' with the actual path to your Odoo server files
-          python ./odoo-bin
+          #cd path/to/odoo  # Replace 'path/to/odoo' with the actual path to your Odoo server files
+          sudo bash odoo-bin
