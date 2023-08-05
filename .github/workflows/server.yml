@@ -1,0 +1,58 @@
+name: Odoo Server Pipeline
+
+on:
+  push:
+    branches:
+      - main  # Replace 'main' with your default branch name if different
+  pull_request:
+
+jobs:
+  run_odoo_server:
+    runs-on: ubuntu-latest  # Use the ubuntu-latest runner with Ubuntu 20.04
+
+    services:
+      postgres:
+        image: postgres:12
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_DB: mydb  # Replace 'mydb' with the desired database name
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Setup Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install build-essential python3-pillow python3-lxml \
+            python3-dev python3-pip python3-setuptools npm nodejs git gdebi \
+            libldap2-dev libsasl2-dev libxml2-dev python3-wheel python3-venv \
+            libxslt1-dev node-less libjpeg-dev
+
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Setup Virtual Environment
+        run: |
+          python3 -m venv odoo-venv
+          source odoo-venv/bin/activate
+          pip3 install wheel
+          pip install -r requirements.txt
+
+      - name: Run Odoo Locally
+        run: |
+          
+          # Replace 'path/to/odoo' with the actual path to your Odoo server files
+          sudo bash odoo-bin --stop-after-init  # Run Odoo but stop after initialization
+
+      # Add any other steps you need before running odoo-bin
+
+      - name: Run Odoo Server
+        run: |
+          # Replace 'path/to/odoo' with the actual path to your Odoo server files
+          sudo bash odoo-bin
